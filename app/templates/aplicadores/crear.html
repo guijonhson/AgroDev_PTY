@@ -1,0 +1,23 @@
+{% extends "base.html" %}
+{% block title %}Nuevo Aplicador - AgroDev{% endblock %}
+{% block content %}
+<h3 class="h4 h3-md"><i class="bi bi-person-badge"></i> Nuevo Aplicador</h3>
+<div class="card mt-3">
+    <div class="card-body">
+        <form method="POST">
+            <div class="mb-3">
+                <label class="form-label">Nombre</label>
+                <input type="text" name="nombre" class="form-control" required>
+            </div>
+            <div class="mb-3">
+                <label class="form-label">Cargo</label>
+                <input type="text" name="cargo" class="form-control">
+            </div>
+            <div class="d-flex flex-column flex-md-row gap-2">
+                <button type="submit" class="btn btn-success w-100 w-md-auto">Guardar</button>
+                <a href="{{ url_for('aplicadores.listar') }}" class="btn btn-secondary w-100 w-md-auto">Cancelar</a>
+            </div>
+        </form>
+    </div>
+</div>
+{% endblock %}

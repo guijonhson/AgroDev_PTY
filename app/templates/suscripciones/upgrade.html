@@ -1,0 +1,76 @@
+{% extends "base.html" %}
+{% block title %}Planes - AgroDev{% endblock %}
+{% block content %}
+<div class="d-flex justify-content-between align-items-center mb-4">
+    <h2>Planes de Suscripcion</h2>
+    <a href="{{ url_for('suscripciones.index') }}" class="btn btn-outline-secondary">
+        <i class="bi bi-arrow-left"></i> Volver
+    </a>
+</div>
+
+{% with messages = get_flashed_messages(with_categories=true) %}
+  {% if messages %}
+    {% for category, message in messages %}
+      <div class="alert alert-{{ category }} alert-dismissible fade show" role="alert">
+        {{ message }}
+        <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+      </div>
+    {% endfor %}
+  {% endif %}
+{% endwith %}
+
+<div class="row g-4">
+    {% for plan in planes %}
+    <div class="col-md-4">
+        <div class="card h-100 {% if plan.nombre_plan == 'PRO' %}border-primary{% elif plan.nombre_plan == 'BASICO' %}border-success border-2{% endif %}">
+            {% if plan.nombre_plan == 'BASICO' %}
+            <div class="position-absolute top-0 end-0 m-2">
+                <span class="badge bg-success">Recomendado</span>
+            </div>
+            {% endif %}
+            <div class="card-header bg-light text-center">
+                <h4 class="mb-0">{{ plan.nombre_plan }}</h4>
+            </div>
+            <div class="card-body text-center">
+                <h2 class="text-primary">${{ plan.precio_mensual }}</h2>
+                <p class="text-muted">/mes</p>
+                <hr>
+                <div class="text-start">
+                    <p class="mb-2">
+                        <i class="bi bi-check-circle text-success"></i> 
+                        <strong>{% if plan.limite_fincas is none %}Ilimitado{% else %}{{ plan.limite_fincas }}{% endif %}</strong> 
+                        {% if plan.limite_fincas == 1 %}finca{% else %}fincas{% endif %}
+                    </p>
+                    <p class="mb-2">
+                        <i class="bi bi-check-circle text-success"></i> 
+                        <strong>{% if plan.limite_usuarios is none %}Ilimitado{% else %}{{ plan.limite_usuarios }}{% endif %}</strong> 
+                        {% if plan.limite_usuarios == 1 %}usuario{% else %}usuarios{% endif %}
+                    </p>
+                    <p class="mb-2">
+                        <i class="bi bi-check-circle text-success"></i> 
+                        <strong>{% if plan.limite_parcelas is none %}Ilimitado{% else %}{{ plan.limite_parcelas }}{% endif %}</strong> 
+                        {% if plan.limite_parcelas == 1 %}parcela{% else %}parcelas{% endif %}
+                    </p>
+                    <p class="mb-2">
+                        <i class="bi bi-check-circle text-success"></i> 
+                        <strong>{% if plan.limite_productos is none %}Ilimitado{% else %}{{ plan.limite_productos }}{% endif %}</strong> 
+                        productos
+                    </p>
+                    {% if plan.reportes_avanzados %}
+                    <p class="mb-1"><i class="bi bi-check-circle text-success"></i> Reportes avanzados</p>
+                    {% endif %}
+                    {% if plan.exportar_datos %}
+                    <p class="mb-1"><i class="bi bi-check-circle text-success"></i> Exportar datos</p>
+                    {% endif %}
+                </div>
+            </div>
+            <div class="card-footer text-center">
+                <a href="{{ url_for('suscripciones.pagar', id_plan=plan.id) }}" class="btn btn-primary w-100">
+                    <i class="bi bi-credit-card"></i> Suscribirse
+                </a>
+            </div>
+        </div>
+    </div>
+    {% endfor %}
+</div>
+{% endblock %}

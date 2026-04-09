@@ -1,0 +1,28 @@
+{% extends "base.html" %}
+{% block login_content %}
+<div class="container">
+    <div class="row justify-content-center mt-4 mt-md-5">
+        <div class="col-11 col-sm-9 col-md-6 col-lg-4">
+            <div class="card auth-card">
+                <div class="card-body text-center p-4">
+                    <img src="{{ url_for('static', filename='img/logo.jpeg') }}" alt="AgroDev" class="auth-logo mb-3 img-fluid">
+                    <form method="POST">
+                        <div class="mb-3 text-start">
+                            <label class="form-label">Correo</label>
+                            <input type="email" name="correo" class="form-control" required>
+                        </div>
+                        <div class="mb-3 text-start">
+                            <label class="form-label">Contraseña</label>
+                            <input type="password" name="password" class="form-control" required>
+                        </div>
+                        <button type="submit" class="btn btn-success w-100">Iniciar Sesión</button>
+                    </form>
+                    <div class="text-center mt-3">
+                        <a href="{{ url_for('auth.register') }}">Crear cuenta</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

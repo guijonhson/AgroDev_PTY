@@ -1,0 +1,81 @@
+{% extends "base.html" %}
+{% block title %}Nueva Aplicación - AgroDev{% endblock %}
+{% block content %}
+<h3 class="h4 h3-md"><i class="bi bi-journal-text"></i> Nueva Aplicación</h3>
+<div class="card mt-3">
+    <div class="card-body">
+        <form method="POST">
+            <div class="row">
+                <div class="col-12 col-sm-6 mb-3">
+                    <label class="form-label">Fecha</label>
+                    <input type="date" name="fecha" class="form-control" required>
+                </div>
+                <div class="col-12 col-sm-6 mb-3">
+                    <label class="form-label">Cultivo</label>
+                    <select name="id_cultivo" class="form-select" required>
+                        <option value="">Seleccionar...</option>
+                        {% for cultivo in cultivos %}
+                        <option value="{{ cultivo.id }}">{{ cultivo.nombre_cultivo }}</option>
+                        {% endfor %}
+                    </select>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-12 col-sm-6 mb-3">
+                    <label class="form-label">Producto</label>
+                    <select name="id_producto" class="form-select" required>
+                        <option value="">Seleccionar...</option>
+                        {% for producto in productos %}
+                        <option value="{{ producto.id }}">{{ producto.nombre_producto }} ({{ producto.tipo_producto }})</option>
+                        {% endfor %}
+                    </select>
+                </div>
+                <div class="col-12 col-sm-6 mb-3">
+                    <label class="form-label">Tipo de Control</label>
+                    <select name="tipo_control" class="form-select" required>
+                        <option value="">Seleccionar...</option>
+                        <option value="herbicida">Herbicida</option>
+                        <option value="fungicida">Fungicida</option>
+                        <option value="insecticida">Insecticida</option>
+                        <option value="fertilizacion">Fertilización</option>
+                        <option value="control_maleza">Control de Maleza</option>
+                        <option value="otro">Otro</option>
+                    </select>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-12 col-sm-6 mb-3">
+                    <label class="form-label">Dosis</label>
+                    <input type="number" step="0.01" name="dosis" class="form-control" placeholder="Cantidad aplicada" required>
+                </div>
+                <div class="col-12 col-sm-6 mb-3">
+                    <label class="form-label">Parcela</label>
+                    <select name="id_parcela" class="form-select" required>
+                        <option value="">Seleccionar...</option>
+                        {% for parcela in parcelas %}
+                        <option value="{{ parcela.id }}">{{ parcela.numero_parcela }} ({{ parcela.finca.nombre_finca }})</option>
+                        {% endfor %}
+                    </select>
+                </div>
+            </div>
+            <div class="mb-3">
+                <label class="form-label">Aplicador</label>
+                <select name="id_aplicador" class="form-select" required>
+                    <option value="">Seleccionar...</option>
+                    {% for aplicador in aplicadores %}
+                    <option value="{{ aplicador.id }}">{{ aplicador.nombre }}</option>
+                    {% endfor %}
+                </select>
+            </div>
+            <div class="mb-3">
+                <label class="form-label">Observaciones</label>
+                <textarea name="observaciones" class="form-control" rows="3"></textarea>
+            </div>
+            <div class="d-flex flex-column flex-md-row gap-2">
+                <button type="submit" class="btn btn-success w-100 w-md-auto">Guardar Registro</button>
+                <a href="{{ url_for('registros.listar') }}" class="btn btn-secondary w-100 w-md-auto">Cancelar</a>
+            </div>
+        </form>
+    </div>
+</div>
+{% endblock %}

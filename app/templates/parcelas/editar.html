@@ -1,0 +1,34 @@
+{% extends "base.html" %}
+{% block title %}Editar Parcela - AgroDev{% endblock %}
+{% block content %}
+<h3 class="h4 h3-md"><i class="bi bi-grid"></i> Editar Parcela</h3>
+<div class="card mt-3">
+    <div class="card-body">
+        <form method="POST">
+            <div class="mb-3">
+                <label class="form-label">Finca</label>
+                <select name="id_finca" class="form-select" required>
+                    <option value="{{ parcela.id_finca }}" selected>{{ parcela.finca.nombre_finca }}</option>
+                    {% for financa in fincas %}
+                    {% if financa.id != parcela.id_finca %}
+                    <option value="{{ financa.id }}">{{ financa.nombre_finca }}</option>
+                    {% endif %}
+                    {% endfor %}
+                </select>
+            </div>
+            <div class="mb-3">
+                <label class="form-label">Número/Nombre de Parcela</label>
+                <input type="text" name="numero_parcela" class="form-control" value="{{ parcela.numero_parcela }}" required>
+            </div>
+            <div class="mb-3">
+                <label class="form-label">Área (hectáreas)</label>
+                <input type="number" step="0.01" name="area" class="form-control" value="{{ parcela.area or '' }}">
+            </div>
+            <div class="d-flex flex-column flex-md-row gap-2">
+                <button type="submit" class="btn btn-success w-100 w-md-auto">Guardar Cambios</button>
+                <a href="{{ url_for('parcelas.listar') }}" class="btn btn-secondary w-100 w-md-auto">Cancelar</a>
+            </div>
+        </form>
+    </div>
+</div>
+{% endblock %}

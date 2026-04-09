@@ -1,0 +1,67 @@
+{% extends "base.html" %}
+{% block title %}Notificaciones - AgroDev{% endblock %}
+{% block content %}
+<div class="d-flex justify-content-between align-items-center mb-4">
+    <h2>Notificaciones</h2>
+    {% if notificaciones %}
+    <form action="{{ url_for('notificaciones.marcar_todas_leidas') }}" method="POST">
+        <button type="submit" class="btn btn-outline-primary btn-sm">
+            <i class="bi bi-check-all"></i> Marcar todas como leídas
+        </button>
+    </form>
+    {% endif %}
+</div>
+
+{% with messages = get_flashed_messages(with_categories=true) %}
+  {% if messages %}
+    {% for category, message in messages %}
+      <div class="alert alert-{{ category }} alert-dismissible fade show" role="alert">
+        {{ message }}
+        <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+      </div>
+    {% endfor %}
+  {% endif %}
+{% endwith %}
+
+{% if notificaciones %}
+<div class="list-group">
+    {% for notificacion in notificaciones %}
+    <div class="list-group-item list-group-item-action {% if not notificacion.leido %}bg-light{% endif %}">
+        <div class="d-flex justify-content-between align-items-center">
+            <div class="flex-grow-1">
+                <div class="d-flex align-items-center">
+                    {% if not notificacion.leido %}
+                    <span class="badge bg-primary rounded-pill me-2">Nueva</span>
+                    {% endif %}
+                    <h6 class="mb-0 {% if not notificacion.leido %}fw-bold{% endif %}">{{ notificacion.titulo }}</h6>
+                </div>
+                <p class="mb-1 text-muted">{{ notificacion.mensaje }}</p>
+                <small class="text-muted">{{ notificacion.fecha.strftime('%d/%m/%Y %H:%M') }}</small>
+            </div>
+            <div class="d-flex gap-2">
+                {% if not notificacion.leido %}
+                <form action="{{ url_for('notificaciones.marcar_leida', id=notificacion.id) }}" method="POST">
+                    <button type="submit" class="btn btn-sm btn-outline-success" title="Marcar como leída">
+                        <i class="bi bi-check"></i>
+                    </button>
+                </form>
+                {% endif %}
+                {% if current_user.rol == 'administrador' %}
+                <form action="{{ url_for('notificaciones.eliminar', id=notificacion.id) }}" method="POST">
+                    <button type="submit" class="btn btn-sm btn-outline-danger" title="Eliminar">
+                        <i class="bi bi-trash"></i>
+                    </button>
+                </form>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+    {% endfor %}
+</div>
+{% else %}
+<div class="text-center py-5">
+    <i class="bi bi-bell-slash fs-1 text-muted"></i>
+    <p class="text-muted mt-3">No tienes notificaciones</p>
+</div>
+{% endif %}
+{% endblock %}

@@ -1,0 +1,240 @@
+{% extends "base.html" %}
+{% block title %}Dashboard - AgroDev{% endblock %}
+{% block content %}
+{% if current_user.rol == 'administrador' and metricas_admin %}
+<div class="row g-3 mb-4">
+    <div class="col-6 col-lg-3">
+        <div class="card border-primary h-100 dashboard-card">
+            <div class="card-body text-center p-3">
+                <div class="mb-2">
+                    <i class="bi bi-people fs-icon text-primary"></i>
+                </div>
+                <h6 class="card-title text-muted mb-1">Usuarios Totales</h6>
+                <h2 class="mb-2">{{ metricas_admin.usuarios_totales }}</h2>
+            </div>
+        </div>
+    </div>
+    <div class="col-6 col-lg-3">
+        <div class="card border-success h-100 dashboard-card">
+            <div class="card-body text-center p-3">
+                <div class="mb-2">
+                    <i class="bi bi-person-check fs-icon text-success"></i>
+                </div>
+                <h6 class="card-title text-muted mb-1">Usuarios Hoy</h6>
+                <h2 class="mb-2">{{ metricas_admin.usuarios_hoy }}</h2>
+            </div>
+        </div>
+    </div>
+    <div class="col-6 col-lg-3">
+        <div class="card border-warning h-100 dashboard-card">
+            <div class="card-body text-center p-3">
+                <div class="mb-2">
+                    <i class="bi bi-clock-history fs-icon text-warning"></i>
+                </div>
+                <h6 class="card-title text-muted mb-1">Esta Semana</h6>
+                <h2 class="mb-2">{{ metricas_admin.usuarios_semana }}</h2>
+            </div>
+        </div>
+    </div>
+    <div class="col-6 col-lg-3">
+        <div class="card border-info h-100 dashboard-card">
+            <div class="card-body text-center p-3">
+                <div class="mb-2">
+                    <i class="bi bi-bell fs-icon text-info"></i>
+                </div>
+                <h6 class="card-title text-muted mb-1">Notificaciones</h6>
+                <h2 class="mb-2">{{ metricas_admin.notificaciones_nuevas }}</h2>
+                <a href="{{ url_for('notificaciones.listar') }}" class="btn btn-sm btn-outline-info w-100">Ver</a>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="row g-3 mb-4">
+    <div class="col-6 col-lg-6">
+        <div class="card border-danger h-100 dashboard-card">
+            <div class="card-body text-center p-3">
+                <div class="mb-2">
+                    <i class="bi bi-hourglass-split fs-icon text-danger"></i>
+                </div>
+                <h6 class="card-title text-muted mb-1">Pagos Pendientes</h6>
+                <h2 class="mb-2">{{ metricas_admin.pagos_pendientes }}</h2>
+                <a href="{{ url_for('suscripciones.pagos_pendientes') }}" class="btn btn-sm btn-outline-danger w-100">Ver</a>
+            </div>
+        </div>
+    </div>
+    <div class="col-6 col-lg-6">
+        <div class="card border-secondary h-100 dashboard-card">
+            <div class="card-body text-center p-3">
+                <div class="mb-2">
+                    <i class="bi bi-diagram-3 fs-icon text-secondary"></i>
+                </div>
+                <h6 class="card-title text-muted mb-1">Gestión de Suscripciones</h6>
+                <div class="mt-4">
+                    <a href="{{ url_for('suscripciones.index') }}" class="btn btn-sm btn-outline-secondary w-100">Ver Planes</a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endif %}
+
+<div class="mb-4">
+    <h2 class="h3 mb-1">Bienvenido, {{ current_user.nombre_usuario }}</h2>
+    <p class="text-muted mb-0">Sistema de Gestión Agropecuaria</p>
+</div>
+
+<div class="row g-3 mb-4">
+    <div class="col-6 col-lg-3">
+        <div class="card border-success h-100 dashboard-card">
+            <div class="card-body text-center p-3">
+                <div class="mb-2">
+                    <i class="bi bi-building fs-icon text-success"></i>
+                </div>
+                <h6 class="card-title text-muted mb-1">Fincas</h6>
+                <h2 class="mb-2">{{ num_fincas }}</h2>
+                <a href="{{ url_for('fincas.listar') }}" class="btn btn-sm btn-outline-success w-100">Ver</a>
+            </div>
+        </div>
+    </div>
+    <div class="col-6 col-lg-3">
+        <div class="card border-primary h-100 dashboard-card">
+            <div class="card-body text-center p-3">
+                <div class="mb-2">
+                    <i class="bi bi-grid fs-icon text-primary"></i>
+                </div>
+                <h6 class="card-title text-muted mb-1">Parcelas</h6>
+                <h2 class="mb-2">{{ num_parcelas }}</h2>
+                <a href="{{ url_for('parcelas.listar') }}" class="btn btn-sm btn-outline-primary w-100">Ver</a>
+            </div>
+        </div>
+    </div>
+    <div class="col-6 col-lg-3">
+        <div class="card border-warning h-100 dashboard-card">
+            <div class="card-body text-center p-3">
+                <div class="mb-2">
+                    <i class="bi bi-box-seam fs-icon text-warning"></i>
+                </div>
+                <h6 class="card-title text-muted mb-1">Inventario</h6>
+                <h2 class="mb-2">{{ num_productos_inventario }}</h2>
+                <a href="{{ url_for('inventario.listar') }}" class="btn btn-sm btn-outline-warning w-100">Ver</a>
+            </div>
+        </div>
+    </div>
+    <div class="col-6 col-lg-3">
+        <div class="card border-info h-100 dashboard-card">
+            <div class="card-body text-center p-3">
+                <div class="mb-2">
+                    <i class="bi bi-journal-text fs-icon text-info"></i>
+                </div>
+                <h6 class="card-title text-muted mb-1">Registros</h6>
+                <h2 class="mb-2">{{ num_registros }}</h2>
+                <a href="{{ url_for('registros.listar') }}" class="btn btn-sm btn-outline-info w-100">Ver</a>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="row g-3 mb-4">
+    <div class="col-6 col-lg-3">
+        <div class="card border-danger h-100 dashboard-card">
+            <div class="card-body text-center p-3">
+                <div class="mb-2">
+                    <i class="bi bi-cash-stack fs-icon text-danger"></i>
+                </div>
+                <h6 class="card-title text-muted mb-1">Gastos</h6>
+                <h4 class="text-danger mb-2">${{ "%.2f"|format(total_gastos) }}</h4>
+                <a href="{{ url_for('gastos.listar') }}" class="btn btn-sm btn-outline-danger w-100">Ver</a>
+            </div>
+        </div>
+    </div>
+    <div class="col-6 col-lg-3">
+        <div class="card border-success h-100 dashboard-card">
+            <div class="card-body text-center p-3">
+                <div class="mb-2">
+                    <i class="bi bi-basket fs-icon text-success"></i>
+                </div>
+                <h6 class="card-title text-muted mb-1">Producción</h6>
+                <h4 class="text-success mb-2">${{ "%.2f"|format(total_produccion) }}</h4>
+                <a href="{{ url_for('produccion.listar') }}" class="btn btn-sm btn-outline-success w-100">Ver</a>
+            </div>
+        </div>
+    </div>
+    <div class="col-6 col-lg-3">
+        <div class="card border-secondary h-100 dashboard-card">
+            <div class="card-body text-center p-3">
+                <div class="mb-2">
+                    <i class="bi bi-graph-up fs-icon text-secondary"></i>
+                </div>
+                <h6 class="card-title text-muted mb-1">Reportes</h6>
+                <div class="mt-4">
+                    <a href="{{ url_for('reportes.index') }}" class="btn btn-sm btn-outline-secondary w-100">Ver</a>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="col-6 col-lg-3">
+        <div class="card border-dark h-100 dashboard-card">
+            <div class="card-body text-center p-3">
+                <div class="mb-2">
+                    <i class="bi bi-people fs-icon text-dark"></i>
+                </div>
+                <h6 class="card-title text-muted mb-1">Usuarios</h6>
+                <div class="mt-4">
+                    <a href="{{ url_for('gestion_usuarios.listar') }}" class="btn btn-sm btn-outline-dark w-100">Gestión</a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="row g-3">
+    <div class="col-md-6">
+        <div class="card h-100">
+            <div class="card-header bg-light">
+                <h6 class="mb-0"><i class="bi bi-info-circle"></i> Accesos Rápidos</h6>
+            </div>
+            <div class="card-body p-0">
+                <div class="quick-actions list-group list-group-flush">
+                    <a href="{{ url_for('fincas.crear') }}" class="list-group-item list-group-item-action">
+                        <i class="bi bi-plus-circle text-success"></i> Nueva Finca
+                    </a>
+                    <a href="{{ url_for('parcelas.crear') }}" class="list-group-item list-group-item-action">
+                        <i class="bi bi-plus-circle text-primary"></i> Nueva Parcela
+                    </a>
+                    <a href="{{ url_for('gastos.crear') }}" class="list-group-item list-group-item-action">
+                        <i class="bi bi-plus-circle text-danger"></i> Registrar Gasto
+                    </a>
+                    <a href="{{ url_for('produccion.crear') }}" class="list-group-item list-group-item-action">
+                        <i class="bi bi-plus-circle text-success"></i> Registrar Cosecha
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-6">
+        <div class="card h-100">
+            <div class="card-header bg-light">
+                <h6 class="mb-0"><i class="bi bi-currency-dollar"></i> Resumen Financiero</h6>
+            </div>
+            <div class="card-body">
+                <div class="d-flex justify-content-between align-items-center mb-3">
+                    <span>Total Gastos:</span>
+                    <span class="text-danger fw-bold">${{ "%.2f"|format(total_gastos) }}</span>
+                </div>
+                <div class="d-flex justify-content-between align-items-center mb-3">
+                    <span>Total Ingresos:</span>
+                    <span class="text-success fw-bold">${{ "%.2f"|format(total_produccion) }}</span>
+                </div>
+                <hr>
+                <div class="d-flex justify-content-between align-items-center">
+                    <span class="fw-bold">Balance:</span>
+                    <span class="fw-bold {% if total_produccion - total_gastos >= 0 %}text-success{% else %}text-danger{% endif %}">
+                        ${{ "%.2f"|format(total_produccion - total_gastos) }}
+                    </span>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

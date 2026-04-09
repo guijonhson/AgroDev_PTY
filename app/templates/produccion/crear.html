@@ -1,0 +1,69 @@
+{% extends "base.html" %}
+{% block title %}Nueva Cosecha - AgroDev{% endblock %}
+{% block content %}
+<h3 class="h4 h3-md"><i class="bi bi-basket-fill"></i> Registrar Cosecha</h3>
+<div class="card mt-3">
+    <div class="card-body">
+        <form method="POST">
+            <div class="row">
+                <div class="col-12 col-sm-6 mb-3">
+                    <label class="form-label">Cultivo</label>
+                    <select name="id_cultivo" class="form-select" required>
+                        <option value="">Seleccionar...</option>
+                        {% for cultivo in cultivos %}
+                        <option value="{{ cultivo.id }}">{{ cultivo.nombre_cultivo }}</option>
+                        {% endfor %}
+                    </select>
+                </div>
+                <div class="col-12 col-sm-6 mb-3">
+                    <label class="form-label">Parcela</label>
+                    <select name="id_parcela" class="form-select" required>
+                        <option value="">Seleccionar...</option>
+                        {% for parcela in parcelas %}
+                        <option value="{{ parcela.id }}">{{ parcela.numero_parcela }} ({{ parcela.finca.nombre_finca if parcela.finca else 'Sin finca' }})</option>
+                        {% endfor %}
+                    </select>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-12 col-sm-6 mb-3">
+                    <label class="form-label">Fecha de Cosecha</label>
+                    <input type="date" name="fecha_cosecha" class="form-control" required>
+                </div>
+                <div class="col-6 col-sm-3 mb-3">
+                    <label class="form-label">Cantidad</label>
+                    <input type="number" step="0.01" name="cantidad" class="form-control" required>
+                </div>
+                <div class="col-6 col-sm-3 mb-3">
+                    <label class="form-label">Unidad</label>
+                    <select name="unidad_medida" class="form-select">
+                        <option value="kg">Kilogramos (kg)</option>
+                        <option value="ton">Toneladas (ton)</option>
+                        <option value="qq">Quintales (qq)</option>
+                        <option value="unidades">Unidades</option>
+                        <option value="lbs">Libras (lbs)</option>
+                    </select>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-12 col-sm-6 mb-3">
+                    <label class="form-label">Precio de Venta (por unidad)</label>
+                    <input type="number" step="0.01" name="precio_venta" class="form-control" value="0">
+                </div>
+                <div class="col-12 col-sm-6 mb-3">
+                    <label class="form-label">Ingreso Total (calculado)</label>
+                    <input type="text" class="form-control" readonly placeholder="Se calcula automáticamente">
+                </div>
+            </div>
+            <div class="mb-3">
+                <label class="form-label">Observaciones</label>
+                <textarea name="observaciones" class="form-control" rows="3"></textarea>
+            </div>
+            <div class="d-flex flex-column flex-md-row gap-2">
+                <button type="submit" class="btn btn-success w-100 w-md-auto">Registrar Cosecha</button>
+                <a href="{{ url_for('produccion.listar') }}" class="btn btn-secondary w-100 w-md-auto">Cancelar</a>
+            </div>
+        </form>
+    </div>
+</div>
+{% endblock %}

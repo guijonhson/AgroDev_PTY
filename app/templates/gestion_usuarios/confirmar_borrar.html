@@ -1,0 +1,45 @@
+{% extends "base.html" %}
+{% block title %}Confirmar Borrar Historial - AgroDev{% endblock %}
+{% block content %}
+<div class="row justify-content-center">
+    <div class="col-md-6">
+        <div class="card border-danger">
+            <div class="card-header bg-danger text-white">
+                <h4><i class="bi bi-exclamation-triangle"></i> ADVERTENCIA: Borrar Historial</h4>
+            </div>
+            <div class="card-body">
+                <p class="lead">Está a punto de borrar <strong>TODOS</strong> los datos del usuario:</p>
+                <ul>
+                    <li><strong>Usuario:</strong> {{ usuario.nombre_usuario }}</li>
+                    <li><strong>Correo:</strong> {{ usuario.correo }}</li>
+                    <li><strong>Productor:</strong> {{ usuario.productor.nombre }}</li>
+                </ul>
+                
+                <hr>
+                
+                <p class="text-danger"><strong>Se eliminará:</strong></p>
+                <ul>
+                    <li>Todas las fincas</li>
+                    <li>Todas las parcelas</li>
+                    <li>Todos los registros agrícolas</li>
+                    <li>Todos los aplicadores</li>
+                </ul>
+                
+                <hr>
+                
+                <form method="POST">
+                    <div class="mb-3">
+                        <label class="form-label">
+                            Para confirmar, escriba el nombre de usuario: 
+                            <strong>"{{ usuario.nombre_usuario }}"</strong>
+                        </label>
+                        <input type="text" name="confirmar_nombre" class="form-control" required>
+                    </div>
+                    <button type="submit" class="btn btn-danger w-100">Borrar Todo el Historial</button>
+                    <a href="{{ url_for('gestion_usuarios.listar') }}" class="btn btn-secondary w-100 mt-2">Cancelar</a>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

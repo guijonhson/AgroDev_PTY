@@ -1,0 +1,49 @@
+{% extends "base.html" %}
+{% block title %}Parcelas - AgroDev{% endblock %}
+{% block content %}
+<div class="d-flex justify-content-between align-items-center mb-3 flex-wrap gap-2">
+    <h3 class="h4 h3-md mb-0"><i class="bi bi-grid"></i> Mis Parcelas</h3>
+    <a href="{{ url_for('parcelas.crear') }}" class="btn btn-success btn-sm w-100 w-md-auto"><i class="bi bi-plus"></i> Nueva Parcela</a>
+</div>
+<div class="card">
+    <div class="card-header bg-light py-3">
+        <h5 class="mb-0 h6">Total: {{ parcelas|length }} parcelas</h5>
+    </div>
+    <div class="card-body p-0">
+        {% if parcelas %}
+        <div class="table-responsive">
+            <table class="table table-hover table-striped mb-0 table-stack">
+                <thead class="table-dark">
+                    <tr>
+                        <th>Número</th>
+                        <th>Finca</th>
+                        <th>Área (ha)</th>
+                        <th class="text-center">Acciones</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for parcela in parcelas %}
+                    <tr>
+                        <td data-label="Número" class="fw-bold">{{ parcela.numero_parcela }}</td>
+                        <td data-label="Finca">{{ parcela.finca.nombre_finca }}</td>
+                        <td data-label="Área">{{ parcela.area or '-' }}</td>
+                        <td data-label="Acciones" class="text-center">
+                            <div class="btn-group btn-group-sm" role="group">
+                                <a href="{{ url_for('parcelas.editar', id=parcela.id) }}" class="btn btn-warning" title="Editar"><i class="bi bi-pencil"></i></a>
+                            </div>
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+        {% else %}
+        <div class="text-center py-4">
+            <i class="bi bi-grid fs-1 text-muted"></i>
+            <p class="text-muted mt-2">No hay parcelas registradas.</p>
+            <a href="{{ url_for('parcelas.crear') }}" class="btn btn-success btn-sm"><i class="bi bi-plus"></i> Crear primera parcela</a>
+        </div>
+        {% endif %}
+    </div>
+</div>
+{% endblock %}

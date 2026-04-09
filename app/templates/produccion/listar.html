@@ -1,0 +1,70 @@
+{% extends "base.html" %}
+{% block title %}Listar Producción - AgroDev{% endblock %}
+{% block content %}
+<div class="d-flex justify-content-between align-items-center mb-3 flex-wrap gap-2">
+    <h3 class="h4 h3-md mb-0"><i class="bi bi-basket"></i> Registro de Producción</h3>
+    <div class="d-flex flex-wrap gap-2 w-100 w-md-auto">
+        <a href="{{ url_for('produccion.resumen') }}" class="btn btn-info btn-sm w-100 w-md-auto"><i class="bi bi-graph-up"></i> Resumen</a>
+        <a href="{{ url_for('produccion.crear') }}" class="btn btn-success btn-sm w-100 w-md-auto"><i class="bi bi-plus"></i> Registrar Cosecha</a>
+    </div>
+</div>
+
+<div class="card">
+    <div class="card-header bg-light py-3">
+        <h5 class="mb-0 h6">Total: {{ producciones|length }} cosechas registradas</h5>
+    </div>
+    <div class="card-body p-0">
+        {% if producciones %}
+        <div class="table-responsive">
+            <table class="table table-hover table-striped mb-0 table-stack">
+                <thead class="table-dark">
+                    <tr>
+                        <th>Cultivo</th>
+                        <th>Parcela</th>
+                        <th>Fecha Cosecha</th>
+                        <th class="text-end">Cantidad</th>
+                        <th>Unidad</th>
+                        <th class="text-end">Precio Venta</th>
+                        <th class="text-end">Ingreso</th>
+                        <th class="text-center">Acciones</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for p in producciones %}
+                    <tr>
+                        <td data-label="Cultivo" class="fw-bold">{{ p.cultivo.nombre_cultivo if p.cultivo else '-' }}</td>
+                        <td data-label="Parcela">{{ p.parcela.nombre_parcela if p.parcela else '-' }}</td>
+                        <td data-label="Fecha">{{ p.fecha_cosecha.strftime('%d/%m/%Y') }}</td>
+                        <td data-label="Cantidad" class="text-end">{{ "%.2f"|format(p.cantidad) }}</td>
+                        <td data-label="Unidad">{{ p.unidad_medida }}</td>
+                        <td data-label="Precio" class="text-end">${{ "%.2f"|format(p.precio_venta) }}</td>
+                        <td data-label="Ingreso" class="text-end fw-bold text-success">${{ "%.2f"|format(p.ingreso_total) }}</td>
+                        <td data-label="Acciones" class="text-center">
+                            <div class="btn-group btn-group-sm" role="group">
+                                <a href="{{ url_for('produccion.editar', id=p.id) }}" class="btn btn-warning" title="Editar"><i class="bi bi-pencil"></i></a>
+                                <form method="POST" action="{{ url_for('produccion.eliminar', id=p.id) }}" style="display:inline;">
+                                    <button type="submit" class="btn btn-danger" title="Eliminar" onclick="return confirm('¿Eliminar este registro?')">
+                                        <i class="bi bi-trash"></i>
+                                    </button>
+                                </form>
+                            </div>
+                        </td>
+                    </tr>
+                    {% else %}
+                    <tr>
+                        <td colspan="8" class="text-center">No hay registros de producción.</td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+        {% else %}
+        <div class="text-center py-4">
+            <i class="bi bi-basket fs-1 text-muted"></i>
+            <p class="text-muted mt-2">No hay registros de producción.</p>
+            <a href="{{ url_for('produccion.crear') }}" class="btn btn-success btn-sm"><i class="bi bi-plus"></i> Registrar primera cosecha</a>
+        </div>
+        {% endif %}
+    </div>
+</div>
+{% endblock %}

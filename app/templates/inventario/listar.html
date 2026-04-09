@@ -1,0 +1,69 @@
+{% extends "base.html" %}
+{% block title %}Inventario - AgroDev{% endblock %}
+{% block content %}
+<div class="d-flex justify-content-between align-items-center mb-3 flex-wrap gap-2">
+    <h3 class="h4 h3-md mb-0"><i class="bi bi-box-seam"></i> Inventario</h3>
+    <div class="d-flex flex-wrap gap-2 w-100 w-md-auto">
+        <a href="{{ url_for('inventario.alertas') }}" class="btn btn-warning btn-sm w-100 w-md-auto"><i class="bi bi-exclamation-triangle"></i> Alertas</a>
+        <a href="{{ url_for('inventario.reportes') }}" class="btn btn-info btn-sm w-100 w-md-auto"><i class="bi bi-graph-up"></i> Reportes</a>
+        <a href="{{ url_for('inventario.crear') }}" class="btn btn-success btn-sm w-100 w-md-auto"><i class="bi bi-plus"></i> Nuevo</a>
+    </div>
+</div>
+<div class="card">
+    <div class="card-header bg-light py-3">
+        <h5 class="mb-0 h6">Total: {{ inventarios|length }} productos en inventario</h5>
+    </div>
+    <div class="card-body p-0">
+        {% if inventarios %}
+        <div class="table-responsive">
+            <table class="table table-hover table-striped mb-0 table-stack">
+                <thead class="table-dark">
+                    <tr>
+                        <th>Producto</th>
+                        <th>Finca</th>
+                        <th class="text-end">Cantidad</th>
+                        <th>Unidad</th>
+                        <th class="text-end">Costo Unit.</th>
+                        <th class="text-end">Valor Total</th>
+                        <th>Stock Mín.</th>
+                        <th>Estado</th>
+                        <th class="text-center">Acciones</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for inv in inventarios %}
+                    <tr class="{% if inv.bajo_stock %}table-warning{% endif %}">
+                        <td data-label="Producto" class="fw-bold">{{ inv.producto.nombre_producto }}</td>
+                        <td data-label="Finca">{{ inv.finca.nombre_finca }}</td>
+                        <td data-label="Cantidad" class="text-end">{{ inv.cantidad }}</td>
+                        <td data-label="Unidad">{{ inv.unidad_medida or '-' }}</td>
+                        <td data-label="Costo Unit." class="text-end">${{ "%.2f"|format(inv.costo_unitario) }}</td>
+                        <td data-label="Valor Total" class="text-end fw-bold">${{ "%.2f"|format(inv.valor_total) }}</td>
+                        <td data-label="Stock Mín.">{{ inv.stock_minimo }}</td>
+                        <td data-label="Estado">
+                            {% if inv.bajo_stock %}
+                            <span class="badge bg-warning">Bajo Stock</span>
+                            {% else %}
+                            <span class="badge bg-success">Normal</span>
+                            {% endif %}
+                        </td>
+                        <td data-label="Acciones" class="text-center">
+                            <div class="btn-group btn-group-sm" role="group">
+                                <a href="{{ url_for('inventario.editar', id=inv.id) }}" class="btn btn-warning" title="Editar"><i class="bi bi-pencil"></i></a>
+                            </div>
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+        {% else %}
+        <div class="text-center py-4">
+            <i class="bi bi-box-seam fs-1 text-muted"></i>
+            <p class="text-muted mt-2">No hay productos en inventario.</p>
+            <a href="{{ url_for('inventario.crear') }}" class="btn btn-success btn-sm"><i class="bi bi-plus"></i> Agregar primer producto</a>
+        </div>
+        {% endif %}
+    </div>
+</div>
+{% endblock %}

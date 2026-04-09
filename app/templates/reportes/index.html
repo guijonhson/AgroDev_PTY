@@ -1,0 +1,56 @@
+{% extends "base.html" %}
+{% block title %}Reportes - AgroDev{% endblock %}
+{% block content %}
+<h3><i class="bi bi-graph-up"></i> Consultas y Reportes</h3>
+<div class="card mt-3">
+    <div class="card-body">
+        <div class="row">
+            <div class="col-md-6">
+                <div class="card bg-light">
+                    <div class="card-body">
+                        <h5><i class="bi bi-search"></i> Búsqueda Personalizada</h5>
+                        <form action="{{ url_for('reportes.buscar') }}" method="POST">
+                            <div class="mb-2">
+                                <label class="form-label">Fecha Inicio</label>
+                                <input type="date" name="fecha_inicio" class="form-control">
+                            </div>
+                            <div class="mb-2">
+                                <label class="form-label">Fecha Fin</label>
+                                <input type="date" name="fecha_fin" class="form-control">
+                            </div>
+                            <div class="mb-2">
+                                <label class="form-label">Cultivo</label>
+                                <select name="id_cultivo" class="form-select">
+                                    <option value="">Todos</option>
+                                </select>
+                            </div>
+                            <div class="mb-2">
+                                <label class="form-label">Producto</label>
+                                <select name="id_producto" class="form-select">
+                                    <option value="">Todos</option>
+                                </select>
+                            </div>
+                            <div class="mb-2">
+                                <label class="form-label">Parcela</label>
+                                <select name="id_parcela" class="form-select">
+                                    <option value="">Todas</option>
+                                </select>
+                            </div>
+                            <button type="submit" class="btn btn-primary">Buscar</button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-6">
+                <div class="card bg-light">
+                    <div class="card-body">
+                        <h5><i class="bi bi-pie-chart"></i> Resumen General</h5>
+                        <p>Ver estadísticas de tus registros agrícolas.</p>
+                        <a href="{{ url_for('reportes.resumen') }}" class="btn btn-info">Ver Resumen</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

@@ -1,0 +1,58 @@
+{% extends "base.html" %}
+{% block title %}Gastos - AgroDev{% endblock %}
+{% block content %}
+<div class="d-flex justify-content-between align-items-center mb-3 flex-wrap gap-2">
+    <h3 class="h4 h3-md mb-0"><i class="bi bi-cash-stack"></i> Gastos</h3>
+    <div class="d-flex flex-wrap gap-2 w-100 w-md-auto">
+
+        <a href="{{ url_for('gastos.crear') }}" class="btn btn-success btn-sm w-100 w-md-auto"><i class="bi bi-plus"></i> Nuevo Gasto</a>
+    </div>
+</div>
+<div class="card">
+    <div class="card-header bg-light py-3">
+        <h5 class="mb-0 h6">Total: {{ gastos|length }} gastos registrados</h5>
+    </div>
+    <div class="card-body p-0">
+        {% if gastos %}
+        <div class="table-responsive">
+            <table class="table table-hover table-striped mb-0 table-stack">
+                <thead class="table-dark">
+                    <tr>
+                        <th>Fecha</th>
+                        <th>Tipo</th>
+                        <th>Descripción</th>
+                        <th class="text-end">Monto</th>
+                        <th>Finca</th>
+                        <th>Responsable</th>
+                        <th class="text-center">Acciones</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for gasto in gastos %}
+                    <tr>
+                        <td data-label="Fecha">{{ gasto.fecha.strftime('%d/%m/%Y') }}</td>
+                        <td data-label="Tipo"><span class="badge bg-secondary">{{ categorias[gasto.tipo_gasto] }}</span></td>
+                        <td data-label="Descripción">{{ gasto.descripcion or '-' }}</td>
+                        <td data-label="Monto" class="text-end fw-bold text-danger">${{ "%.2f"|format(gasto.monto) }}</td>
+                        <td data-label="Finca">{{ gasto.finca.nombre_finca }}</td>
+                        <td data-label="Responsable">{{ gasto.responsable or '-' }}</td>
+                        <td data-label="Acciones" class="text-center">
+                            <div class="btn-group btn-group-sm" role="group">
+                                <a href="{{ url_for('gastos.editar', id=gasto.id) }}" class="btn btn-warning" title="Editar"><i class="bi bi-pencil"></i></a>
+                            </div>
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+        {% else %}
+        <div class="text-center py-4">
+            <i class="bi bi-cash-stack fs-1 text-muted"></i>
+            <p class="text-muted mt-2">No hay gastos registrados.</p>
+            <a href="{{ url_for('gastos.crear') }}" class="btn btn-success btn-sm"><i class="bi bi-plus"></i> Registrar primer gasto</a>
+        </div>
+        {% endif %}
+    </div>
+</div>
+{% endblock %}
