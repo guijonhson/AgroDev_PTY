@@ -19,7 +19,6 @@ agrodev/
 ├── database/agrodev.db      # SQLite
 ├── run.py                  # Ejecutor
 ├── init_demo.py            # Datos demo
-├── DEPLOY.md               # Guía producción
 ├── requirements.txt        # Dependencias
 └── .env.example           # Variables entorno
 ```
@@ -37,10 +36,20 @@ venv\Scripts\python run.py
 ### Pruebas con pytest
 ```bash
 pytest                          # Todas
-pytest tests/test_archivo.py     # Un archivo
-pytest tests/test.py::test_fn    # Una función
-pytest -v                        # Verbose
-pytest -k "patron"               # Por nombre
+pytest tests/test_archivo.py    # Un archivo
+pytest tests/test.py::test_fn   # Una función específica
+pytest -v                       # Verbose
+pytest -k "patron"              # Por nombre
+pytest --cov=app               # Con coverage
+pytest --cov-report=html        # Reporte HTML
+```
+
+### Linting y Type Checking
+```bash
+ruff check .                   # Lint todo el proyecto
+ruff check app/models/         # Lint directorio específico
+ruff check --fix .             # Auto-corregir
+mypy app/                      # Type checking
 ```
 
 ### Base de Datos
@@ -53,35 +62,44 @@ venv\Scripts\python init_demo.py
 
 ## Convenciones de Código
 
-### Imports
+### Imports (orden estándar)
 ```python
+# 1. stdlib
+import os
+import re
+from datetime import datetime
+
+# 2. third-party
+from flask import Flask, redirect, url_for
+from flask_login import LoginManager, login_required, current_user
+from flask_bcrypt import Bcrypt
+
+# 3. local
 from app.config.database import db
 from app.models import Usuario, Productor, Finca
 from app.utils.suscripcion import verificar_limite
 ```
 
-### Nombres
-- Clases: PascalCase (`Productor`, `Usuario`)
-- Funciones/variables: snake_case
-- Blueprints: minúsculas (`fincas`, `auth`)
+### Nomenclatura
+- **Clases**: PascalCase (`Productor`, `Usuario`, `FincaMapper`)
+- **Funciones/variables**: snake_case (`nombre_finca`, `get_user_by_email`)
+- **Constantes**: UPPER_SNAKE_CASE (`MAX_LOGIN_ATTEMPTS`)
+- **Blueprints**: minúsculas (`fincas`, `auth`, `inventario`)
+- **Tablas/Columnas**: snake_case (`nombre_finca`, `id_productor`)
 
 ### SQLAlchemy
 ```python
-# Crear
-p = Productor(nombre="Juan")
-db.session.add(p)
-db.session.commit()
-
-# Consultar
-u = Usuario.query.filter_by(correo=correo).first()
-fincas = Finca.query.filter_by(id_productor=id_productor).all()
-
 # Primary key: usar 'id' (NO id_productor, id_finca)
 id = db.Column(db.Integer, primary_key=True)
 
 # Relaciones: back_populates (NO backref)
 class Finca(db.Model):
+    __tablename__ = 'fincas'
     parcelas = db.relationship('Parcela', back_populates='finca')
+
+# Consultas
+u = Usuario.query.filter_by(correo=correo).first()
+fincas = Finca.query.filter_by(id_productor=id_productor).all()
 ```
 
 ### Flask-Login
@@ -96,9 +114,11 @@ class Usuario(db.Model):
     def get_id(self): return str(self.id)
 ```
 
-### Errores
-- Usar `flash()` para mensajes
+### Manejo de Errores
+- Usar `flash()` para mensajes al usuario
 - Usar `get_or_404()` para consultas obligatorias
+- Try/except solo donde sea necesario, no abusar
+- Registrar errores con `app.logger.error()`
 
 ## HTML/Jinja2
 
@@ -129,7 +149,6 @@ fincas = Finca.query.filter_by(id_productor=current_user.id_productor).all()
 
 ## Sistema de Suscripciones
 
-### Planes
 | Plan | Fincas | Usuarios | Parcelas | Productos | Precio |
 |------|--------|----------|----------|-----------|--------|
 | FREE | 1 | 1 | 5 | 50 | $0 |
@@ -146,22 +165,7 @@ puede, mensaje = verificar_limite(current_user.id_productor, 'finca')
 if not puede:
     flash(mensaje, 'warning')
     return redirect(url_for('suscripciones.upgrade'))
-
-# Admin siempre tiene acceso ilimitado
-es_admin(id_productor)  # True/False
 ```
-
-### Notas Importantes
-- **Ilimitado**: Usar `None` en la base de datos (NO usar -1)
-- **Admin**: Siempre tiene acceso ilimitado
-- **Verificar expiración**: `esta_suscripcion_activa(id_productor)`
-
-## Tecnologías
-
-- Flask 3.0.0, SQLAlchemy, SQLite
-- Flask-Login 0.6.3, Flask-Bcrypt 1.0.1
-- Bootstrap 5.3.0, Bootstrap Icons 1.10.0
-- Gunicorn (producción)
 
 ## Errores a Evitar
 
@@ -181,14 +185,13 @@ limite_fincas = None  # CORRECTO
 
 ## Notas para Agentes
 
-- SQLite, NO MongoDB
+- **SQLite, NO MongoDB** - Usar SQLAlchemy
 - Primer usuario = administrador
-- Usar `current_user.id_productor` al filtrar
+- Usar `current_user.id_productor` al filtrar datos
 - LSP errores en SQLAlchemy son falsos positivos
-- DB se crea automáticamente
+- DB se crea automáticamente con `db.create_all()`
 - Nuevos campos: usar ALTER TABLE
 - Frontend: navbar con offcanvas (Bootstrap)
-- Suscripciones: límites en None = ilimitado
 - Admin siempre tiene acceso ilimitado
 
 ## Producción

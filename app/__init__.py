@@ -1,9 +1,11 @@
 from flask import Flask, redirect, url_for, render_template
 from flask_login import LoginManager
+from flask_wtf import CSRFProtect
 from app.config.database import db
 import os
 
 login_manager = LoginManager()
+csrf = CSRFProtect()
 
 def create_app():
     app = Flask(__name__)
@@ -15,6 +17,7 @@ def create_app():
         app.config.from_object('config.DevelopmentConfig')
     
     db.init_app(app)
+    csrf.init_app(app)
     
     login_manager.init_app(app)
     login_manager.login_view = 'auth.login'
